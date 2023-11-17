@@ -1,0 +1,45 @@
+import React from 'react';
+import { render, unmountComponentAtNode } from 'react-dom';
+import { act } from 'react-dom/test-utils';
+import App from './App';
+
+let container = null;
+
+beforeEach(() => {
+  // setup a DOM element as a render target
+  container = document.createElement('div');
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  // cleanup on exiting
+  unmountComponentAtNode(container);
+  container.remove();
+  container = null;
+});
+
+describe("App Component", () => {
+  test("renders without crashing", () => {
+    act(() => {
+      render(<App />, container);
+    });
+    expect(container.textContent).not.toBe(null);
+  });
+
+  test("renders correctly with default props", () => {
+    act(() => {
+      render(<App />, container);
+    });
+    expect(container.querySelector("[data-testid='app']").textContent).toBe("Emoji Search");
+  });
+
+  test("handles error state", () => {
+    // Assuming that an error state shows a specific error message
+    act(() => {
+      render(<App error />, container);
+    });
+    expect(container.querySelector("[data-testid='error']").textContent).toBe("Error occurred");
+  });
+
+  // Add more tests as needed
+});
